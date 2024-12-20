@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <form id="urlForm">
+        <input type="text" id="input" placeholder="Enter URL">
+        <button type="submit">Submit</button>
+    </form>
+<!--     
+    <form action="/url/accessURL" method="post">
+        <input type="text" placeholder="Enter shortURL" name="input">
+        <button type="submit">Submit</button>
+    </form> -->
+    <table>
+        <tr>
+            <th>Short URL</th>
+            <th>Original URL</th>
+        </tr>
+        <% data.forEach(url => { %>
+        <tr>
+            <td><a href="<%= url.originalURL %>" target="_blank"><%= url.shortURL %></a></td>
+            <td><%= url.originalURL %></td>
+        </tr>
+        <% }) %>
+    </table>
+    <script>
+        const input = document.getElementById('input');
+        const form = document.getElementById('urlForm');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // console.log(input.value);
+            try {
+                const response = await fetch(`/url/addURL`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({input:input.value}) 
+                });
+
+                const result = await response.json();
+                // console.log(result); 
+                window.location.href = result.redirect;
+            } catch (error) {
+                console.error('Error:', error); 
+            }
+        });
+    </script>
+</body>
+</html>
